@@ -148,6 +148,77 @@
     <header class="article-header">
         
         <h1 itemprop="name">
+            <a href="/2024/05/17/%E9%98%85%E8%AF%BBgpt_c/">阅读 gpt.c</a>
+        </h1>
+        
+        <div class="article-meta clearfix">
+            <a class="article-date" href="https://xbme2.github.io/index.html">
+    
+    <i class="icon-calendar vm"></i>
+    
+    <time class="vm" datetime="2024-05-17T02:50:58.546Z" itemprop="datePublished">2024-05-17</time>
+</a>
+
+            
+<div class="article-tag-list">
+    <i class="icon-tag vm"></i>
+    <a class="article-tag-link" href="/tags/OS/" rel="tag">OS</a>
+</div>
+
+
+        </div>
+    </header>
+    
+    <section class="article-body markdown-body">
+        
+        <h2 id="GPT2结构体"><a href="#GPT2结构体" class="headerlink" title="GPT2结构体"></a><centre>GPT2结构体</h2><p>从main函数开始阅读，于是去看关于GPT2结构体的定义</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    GPT2Config config;</span><br><span class="line">    <span class="comment">// the weights (parameters) of the model, and their sizes</span></span><br><span class="line">    ParameterTensors params;</span><br><span class="line">    <span class="type">size_t</span> param_sizes[NUM_PARAMETER_TENSORS];</span><br><span class="line">    <span class="type">float</span>* params_memory;</span><br><span class="line">    <span class="type">int</span> num_parameters;</span><br><span class="line">    <span class="comment">// gradients of the weights</span></span><br><span class="line">    ParameterTensors grads;</span><br><span class="line">    <span class="type">float</span>* grads_memory;</span><br><span class="line">    <span class="comment">// buffers for the AdamW optimizer</span></span><br><span class="line">    <span class="type">float</span>* m_memory;</span><br><span class="line">    <span class="type">float</span>* v_memory;</span><br><span class="line">    <span class="comment">// the activations of the model, and their sizes</span></span><br><span class="line">    ActivationTensors acts;</span><br><span class="line">    <span class="type">size_t</span> act_sizes[NUM_ACTIVATION_TENSORS];</span><br><span class="line">    <span class="type">float</span>* acts_memory;</span><br><span class="line">    <span class="type">int</span> num_activations;</span><br><span class="line">    <span class="comment">// gradients of the activations</span></span><br><span class="line">    ActivationTensors grads_acts;</span><br><span class="line">    <span class="type">float</span>* grads_acts_memory;</span><br><span class="line">    <span class="comment">// other run state configuration</span></span><br><span class="line">    <span class="type">int</span> batch_size; <span class="comment">// the batch size (B) of current forward pass</span></span><br><span class="line">    <span class="type">int</span> seq_len; <span class="comment">// the sequence length (T) of current forward pass</span></span><br><span class="line">    <span class="type">int</span>* inputs; <span class="comment">// the input tokens for the current forward pass</span></span><br><span class="line">    <span class="type">int</span>* targets; <span class="comment">// the target tokens for the current forward pass</span></span><br><span class="line">    <span class="type">float</span> mean_loss; <span class="comment">// after a forward pass with targets, will be populated with the mean loss</span></span><br><span class="line">&#125; GPT2;</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-GPT2Config结构体"><a href="#1-GPT2Config结构体" class="headerlink" title="1. GPT2Config结构体"></a>1. GPT2Config结构体</h4><ul>
+<li>定义：<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    <span class="type">int</span> max_seq_len; <span class="comment">// max sequence length, e.g. 1024</span></span><br><span class="line">    <span class="type">int</span> vocab_size; <span class="comment">// vocab size, e.g. 50257</span></span><br><span class="line">    <span class="type">int</span> num_layers; <span class="comment">// number of layers, e.g. 12</span></span><br><span class="line">    <span class="type">int</span> num_heads; <span class="comment">// number of heads in attention, e.g. 12</span></span><br><span class="line">    <span class="type">int</span> channels; <span class="comment">// number of channels, e.g. 768</span></span><br><span class="line">&#125; GPT2Config;</span><br></pre></td></tr></table></figure></li>
+<li>解释：<ul>
+<li>max_seq_len，GPT-2最大可接受的输入序列（tokens）长度</li>
+<li>vocab_size：GPT-2对于每一个输入的token，模型会先从embedding矩阵(wte)中查找输入单词的embedding向量，embedding矩阵可以看做是预训练模型的一部分。<br><img src="https://img-blog.csdnimg.cn/f743f4d544c040799cb76063181bea28.png%22embedding%22" alt="Embedding"><br>$\therefore$ vocab_size是embedding矩阵的行数，也是GPT-2模型的词汇总数</li>
+<li>num_layers：GPT-2模型decoder组件数目<br><img src="https://img-blog.csdnimg.cn/c3076574f4a141389d0f761136f7ee6a.png" alt="DECODER"></li>
+<li>num_heads:多头注意力的头数目，多头就是将原来一个长的Query、Key、Value向量按照不同位置截取并拆分成短的向量，最后将不同头得到的Z拼接</li>
+<li>channels：矩阵长度</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-ParameterTensors结构体："><a href="#2-ParameterTensors结构体：" class="headerlink" title="2. ParameterTensors结构体："></a>2. ParameterTensors结构体：</h4><ul>
+<li>定义<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// the parameters of the model</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NUM_PARAMETER_TENSORS 16</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    <span class="type">float</span>* wte; <span class="comment">// (V, C)</span></span><br><span class="line">    <span class="type">float</span>* wpe; <span class="comment">// (maxT, C)</span></span><br><span class="line">    <span class="type">float</span>* ln1w; <span class="comment">// (L, C)</span></span><br><span class="line">    <span class="type">float</span>* ln1b; <span class="comment">// (L, C)</span></span><br><span class="line">    <span class="type">float</span>* qkvw; <span class="comment">// (L, 3*C, C)</span></span><br><span class="line">    <span class="type">float</span>* qkvb; <span class="comment">// (L, 3*C)</span></span><br><span class="line">    <span class="type">float</span>* attprojw; <span class="comment">// (L, C, C)</span></span><br><span class="line">    <span class="type">float</span>* attprojb; <span class="comment">// (L, C)</span></span><br><span class="line">    <span class="type">float</span>* ln2w; <span class="comment">// (L, C)</span></span><br><span class="line">    <span class="type">float</span>* ln2b; <span class="comment">// (L, C)</span></span><br><span class="line">    <span class="type">float</span>* fcw; <span class="comment">// (L, 4*C, C)</span></span><br><span class="line">    <span class="type">float</span>* fcb; <span class="comment">// (L, 4*C)</span></span><br><span class="line">    <span class="type">float</span>* fcprojw; <span class="comment">// (L, C, 4*C)</span></span><br><span class="line">    <span class="type">float</span>* fcprojb; <span class="comment">// (L, C)</span></span><br><span class="line">    <span class="type">float</span>* lnfw; <span class="comment">// (C)</span></span><br><span class="line">    <span class="type">float</span>* lnfb; <span class="comment">// (C)</span></span><br><span class="line">&#125; ParameterTensors;</span><br></pre></td></tr></table></figure></li>
+<li>解释：<ul>
+<li>wpe：位置编码矩阵<br><img src="https://img-blog.csdnimg.cn/a09bb1aeb1be4db996d73e17c1c3d5d9.png#pic_center" alt="WPE"></li>
+<li>ln1w, ln1b: 第一个Layer Normalization 层的权重和偏置，维度为(L, C)，其中L是层数，C是隐藏层的维度大小。</li>
+</ul>
+</li>
+</ul>
+<h2 id="gpt2-build-from-checkpoint-model-“gpt2-124M-bin”"><a href="#gpt2-build-from-checkpoint-model-“gpt2-124M-bin”" class="headerlink" title="gpt2_build_from_checkpoint(&amp;model, “gpt2_124M.bin”);"></a>gpt2_build_from_checkpoint(&amp;model, “gpt2_124M.bin”);</h2><ul>
+<li>作用<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">读取gpt2_124M.bin，给model初始化参数</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="void-gpt2-forward-GPT2-model-int-inputs-int-B-int-T"><a href="#void-gpt2-forward-GPT2-model-int-inputs-int-B-int-T" class="headerlink" title="void gpt2_forward(GPT2 model, int inputs, int B, int T)"></a>void gpt2_forward(GPT2 <em>model, int</em> inputs, int B, int T)</h2><h3 id="几个部分"><a href="#几个部分" class="headerlink" title="几个部分"></a>几个部分</h3><h4 id="0-为Transformer模型张量（矩阵）分配空间并初始化（？）"><a href="#0-为Transformer模型张量（矩阵）分配空间并初始化（？）" class="headerlink" title="0.为Transformer模型张量（矩阵）分配空间并初始化（？）"></a>0.为Transformer模型张量（矩阵）分配空间并初始化（？）</h4><h4 id="1-void-encoder-forward-float-out-int-inp-float-wte-float-wpe-int-B-int-T-int-C-将输入词交给第一个DECORDER组件之前：先找到该单词的embedding（wte），再把它和对应的位置编码（wpe）相结合。"><a href="#1-void-encoder-forward-float-out-int-inp-float-wte-float-wpe-int-B-int-T-int-C-将输入词交给第一个DECORDER组件之前：先找到该单词的embedding（wte），再把它和对应的位置编码（wpe）相结合。" class="headerlink" title="1.void encoder_forward(float* out,int* inp, float* wte, float* wpe,int B, int T, int C):将输入词交给第一个DECORDER组件之前：先找到该单词的embedding（wte），再把它和对应的位置编码（wpe）相结合。"></a>1.void encoder_forward(float* out,int* inp, float* wte, float* wpe,int B, int T, int C):将输入词交给第一个DECORDER组件之前：先找到该单词的embedding（wte），再把它和对应的位置编码（wpe）相结合。</h4><h4 id="2"><a href="#2" class="headerlink" title="2."></a>2.</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> l = <span class="number">0</span>; l &lt; L; l++) &#123;<span class="comment">//&#125;</span></span><br></pre></td></tr></table></figure>
+<p>L是DECORDER组件数</p>
+<h4 id="3"><a href="#3" class="headerlink" title="3."></a>3.</h4><ul>
+<li>得到每一层组件的权重（矩阵）和激活（？）</li>
+</ul>
+<h4 id="4"><a href="#4" class="headerlink" title="4."></a>4.</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">layernorm_forward(l_ln1, l_ln1_mean, l_ln1_rstd, residual, l_ln1w, l_ln1b, B, T, C);</span><br><span class="line">matmul_forward(l_qkv, l_ln1, l_qkvw, l_qkvb, B, T, C, <span class="number">3</span>*C);</span><br><span class="line">attention_forward(l_atty, l_preatt, l_att, l_qkv, B, T, C, NH);</span><br><span class="line">matmul_forward(l_attproj, l_atty, l_attprojw, l_attprojb, B, T, C, C);</span><br><span class="line">residual_forward(l_residual2, residual, l_attproj, B*T*C);</span><br><span class="line">layernorm_forward(l_ln2, l_ln2_mean, l_ln2_rstd, l_residual2, l_ln2w, l_ln2b, B, T, C);</span><br><span class="line">matmul_forward(l_fch, l_ln2, l_fcw, l_fcb, B, T, C, <span class="number">4</span>*C);</span><br><span class="line">gelu_forward(l_fch_gelu, l_fch, B*T*<span class="number">4</span>*C);</span><br><span class="line">matmul_forward(l_fcproj, l_fch_gelu, l_fcprojw, l_fcprojb, B, T, <span class="number">4</span>*C, C);</span><br><span class="line">residual_forward(l_residual3, l_residual2, l_fcproj, B*T*C);</span><br></pre></td></tr></table></figure>
+
+<h5 id="看不下去这些神经网络的东西了，摆烂了，matmul-forward函数就是耗时最大的，perf调试下来确实也是"><a href="#看不下去这些神经网络的东西了，摆烂了，matmul-forward函数就是耗时最大的，perf调试下来确实也是" class="headerlink" title="看不下去这些神经网络的东西了，摆烂了，matmul_forward函数就是耗时最大的，perf调试下来确实也是"></a>看不下去这些神经网络的东西了，摆烂了，matmul_forward函数就是耗时最大的，perf调试下来确实也是</h5><ol>
+<li>matmul_forward就是个矩阵相乘，B恒为1</li>
+<li>评测机是四核心，所以将其分为四线程</li>
+<li>由于thread.h里规定线程池最多16个，所以在线程回收后要及时将n_减少</li>
+</ol>
+
+        
+    </section>
+</article>
+
+
+    <article class="article" itemscope itemprop="blogPost">
+    
+    <header class="article-header">
+        
+        <h1 itemprop="name">
             <a href="/2024/05/14/hello-world/">Hello World</a>
         </h1>
         
