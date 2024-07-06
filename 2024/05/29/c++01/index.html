@@ -10,7 +10,7 @@
     <title>c++01 | Hexo</title>
     <meta name="author" content="xbme2" />
     <meta name="keywords" content="" />
-    <meta name="description" content="*** CS107L 学习感悟01 ***命名空间namespace123456789101112namespace  algebra&amp;#123;    int bigger(int a,int b)&amp;#123;        return a&amp;gt;b;    &amp;#125;    int add(int a,int b)&amp;#123;        return a+b;    &amp;#125;    &amp;#125;// algebra::sum避免不同库同名函数冲突和提高代码可读性random库使用" />
+    <meta name="description" content="CS107L 学习感悟01命名空间namespace123456789101112namespace  algebra&amp;#123;    int bigger(int a,int b)&amp;#123;        return a&amp;gt;b;    &amp;#125;    int add(int a,int b)&amp;#123;        return a+b;    &amp;#125;    &amp;#125;// algebra::sum避免不同库同名函数冲突和提高代码可读性random库使用需引入rando" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
 
@@ -127,7 +127,7 @@
     
     <section class="article-body markdown-body">
         
-        <p>*** CS107L 学习感悟01 ***</p>
+        <p><em><strong>CS107L 学习感悟01</strong></em></p>
 <span id="more"></span>
 <h3 id="命名空间namespace"><a href="#命名空间namespace" class="headerlink" title="命名空间namespace"></a>命名空间namespace</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span>  algebra</span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">bigger</span><span class="params">(<span class="type">int</span> a,<span class="type">int</span> b)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> a&gt;b;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">add</span><span class="params">(<span class="type">int</span> a,<span class="type">int</span> b)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> a+b;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// algebra::sum</span></span><br></pre></td></tr></table></figure>
 <ul>
