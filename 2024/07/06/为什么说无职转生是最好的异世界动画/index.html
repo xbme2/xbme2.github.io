@@ -7,7 +7,7 @@
 
     
 
-    <title>Tag: 杂谈 | Hexo</title>
+    <title>Hexo</title>
     <meta name="author" content="xbme2" />
     <meta name="keywords" content="" />
     <meta name="description" content="" />
@@ -60,7 +60,7 @@
                 <span class="nav-text">OS</span>
             </a>
         
-            <a class="nav-item active" href="/tags">
+            <a class="nav-item" href="/tags">
                 <span class="nav-text">标签</span>
             </a>
         
@@ -84,6 +84,8 @@
     <div id="aside-inner" class="aside-inner">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"><i class="icon-search-stroke"></i></button><input type="hidden" name="sitesearch" value="https://xbme2.github.io"></form>
 
+        
+        
         
         
 
@@ -142,79 +144,46 @@
 
         <div id="content" class="content">
             <div id="wrapper" class="wrapper" style="max-width: 800px">
-                
+                <article class="article" itemscope itemprop="blogPost">
+    
+    <section class="article-body markdown-body">
+        
+        
+        
+    </section>
+</article>
 
 
-<div class="page-hd">
-    杂谈
-    <small>(2)</small>
+
+<div class="comments">
+    <div id="comments"></div>
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+    new Gitalk({
+        clientID: "7fbe80427f54741e289f",
+        clientSecret: "f34ed5fd92e54c9000bd37ba951948cb939deff5",
+        repo: "sanonz.github.io",
+        owner: "sanonz",
+        admin: ["sanonz"],
+        id: "640b69f12779713f764b77e2bdbcc7af",
+        distractionFreeMode: true,
+        title: "",
+        body: "https://xbme2.github.io/2024/07/06/%E4%B8%BA%E4%BB%80%E4%B9%88%E8%AF%B4%E6%97%A0%E8%81%8C%E8%BD%AC%E7%94%9F%E6%98%AF%E6%9C%80%E5%A5%BD%E7%9A%84%E5%BC%82%E4%B8%96%E7%95%8C%E5%8A%A8%E7%94%BB/",
+        labels: []
+    }).render('comments');
+    </script>
 </div>
-
-
-
-    
-    
-    
-    
-    
-    <section class="archives-wrap">
-    <div class="archive-year-wrap">
-    <a href="/archives/2024" class="page-hd">
-        2024
-    </a>
-    </div>
-    <ol class="archives">
-    
-
-    <li class="archive-section-item">
-        
-<article class="archive-article archive-type-post">
-    <div class="archive-article-inner">
-        <header class="archive-article-header">
-            <a class="archive-article-link" href="/2024/06/20/GBC%E8%A7%82%E5%90%8E%E6%84%9F/">gbc的摇滚</a>
-            <span class="archive-article-date">
-                (<a class="article-date" href="/archives/2024/06">
-    
-    <time class="vm" datetime="2024-06-20T05:12:00.781Z" itemprop="datePublished">6/20</time>
-</a>
-)
-            </span>
-        </header>
-    </div>
-</article>
-    </li>
-
-    
-    
-
-    <li class="archive-section-item">
-        
-<article class="archive-article archive-type-post">
-    <div class="archive-article-inner">
-        <header class="archive-article-header">
-            <a class="archive-article-link" href="/2024/05/21/getline/">从getline开始</a>
-            <span class="archive-article-date">
-                (<a class="article-date" href="/archives/2024/05">
-    
-    <time class="vm" datetime="2024-05-21T04:04:33.724Z" itemprop="datePublished">5/21</time>
-</a>
-)
-            </span>
-        </header>
-    </div>
-</article>
-    </li>
-
-
-</ol></section>
-
-
 
 
 
             </div>
         </div>
 
+        
+            
+            <a id="pagenext" href="/2024/06/25/white%E6%B8%B8%E7%8E%A9%E8%AE%B0%E5%BD%95/" class="article-next" title=""><i class="icon-arrow-right"></i></a>
+            
+            
         
 
         <footer class="footer">
@@ -288,6 +257,33 @@
         });
     });
     </script>
+    
+        
+<script src="/js/scrollspy.min.js"></script>
+
+        <script type="text/javascript">
+        $(document.body).scrollspy({target: '#aside-inner'});
+
+        $(window).on('resize', function() {
+            var hw = $('#header').width();
+            var ww = $('#wrapper').width();
+            var space = ($(this).width() - hw - ww) / 2 / 2;
+
+            var pageprev = $('#pageprev');
+            var pagenext = $('#pagenext');
+            var avg = (pageprev.width() + pagenext.width()) / 2
+
+            if(space > avg) {
+                var len = space - avg / 2;
+                var styles = {position: 'fixed', top: '50%', marginTop: - (pageprev.width() + pagenext.width()) / 4}
+                pageprev.css($.extend({left: hw + len}, styles));
+                pagenext.css($.extend({right: len}, styles));
+            } else {
+                pageprev.removeAttr('style');
+                pagenext.removeAttr('style');
+            }
+        }).trigger('resize');
+        </script>
     
 
 </body>
