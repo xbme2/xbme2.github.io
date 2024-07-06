@@ -171,15 +171,51 @@
     
     <section class="article-body markdown-body">
         
-        <h2 id="Linux下，everything-is-file"><a href="#Linux下，everything-is-file" class="headerlink" title=" Linux下，everything is file"></a><center> Linux下，everything is file</h2>
-        
-        <p class="article-more-link">
-            <a href="/2024/05/26/file/#more">
-                <span class="vm">阅读更多</span>
-                <i class="icon-arrow-double-right vm"></i>    
-            </a>
-        </p>
-        
+        <span id="more"></span>
+<h2 id="Linux下，everything-is-file"><a href="#Linux下，everything-is-file" class="headerlink" title=" Linux下，everything is file"></a><center> Linux下，everything is file</h2><h3 id="一-文件描述符"><a href="#一-文件描述符" class="headerlink" title="一.文件描述符"></a>一.文件描述符</h3><ul>
+<li>我们知道,在Linux系统中一切皆可以看成是文件，文件又可分为：普通文件、目录文件、链接文件和设备文件。在操作这些所谓的文件的时候，我们每操作一次就找一次名字，这会耗费大量的时间和效率。所以Linux中规定每一个文件对应一个索引，这样要操作文件的时候，我们直接找到索引就可以对其进行操作了。</li>
+<li>$\therefore$ 文件描述符<ul>
+<li>文件描述符是一个用于访问文件或其他输入&#x2F;输出资源的 “指针”。在 Unix 和类 Unix 操作系统中，文件描述符是一个非负整数，用于表示一个打开的文件、管道、网络连接或其他类似的资源。当一个程序打开一个文件或创建一个数据流时，操作系统会返回一个文件描述符，程序可以通过这个描述符来读取、写入或操作对应的文件或资源。</li>
+<li>0：标准输入 1：标准输出 2：错误输出</li>
+</ul>
+</li>
+</ul>
+<h4 id="stdin"><a href="#stdin" class="headerlink" title="stdin"></a>stdin</h4><ul>
+<li>stdin默认从键盘读取输入</li>
+<li>UNIX 约定是 stdin 与 stdout 若与终端关联则为行缓冲(<em><strong>?防止频繁的系统调用</strong></em>)，而 stderr 为无缓冲</li>
+<li>行缓冲刷新的条件<ul>
+<li>遇到\n</li>
+<li>超过缓存区的大小（默认1024字节，可更改）</li>
+<li>手动刷新，如fflush(stdout)</li>
+<li>进程结束</li>
+</ul>
+</li>
+<li>在c里，<em><strong>printf</strong></em>是发送格式化输出到标准输出 stdout，<em><strong>perror</strong></em>发送字符串到标准错误stdeer  </li>
+<li>以上仅针对Linux，Windows下stdout似乎也是无缓冲<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stdout</span>, <span class="string">&quot;hello&quot;</span>);</span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;world&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>在Linux下，输出结果是worldhello，但在Windows下输出是helloworld</li>
+</ul>
+<h3 id="二-对文件的系统调用"><a href="#二-对文件的系统调用" class="headerlink" title="二.对文件的系统调用"></a>二.对文件的系统调用</h3><h4 id="write："><a href="#write：" class="headerlink" title="write："></a>write：</h4><p>- </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">size_t</span> <span class="title function_">write</span><span class="params">(<span class="type">int</span> fd,<span class="type">const</span> <span class="type">void</span> *buf,<span class="type">size_t</span> size)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：把缓冲区buf的前size个字节写入与文件描述符<em><strong>fd</strong></em>，返回实际写入的字节数</li>
+<li>如果函数返回值为 0，就表示没有写入任何数据；如果返回值为 -1，则表明 write 系统调用出现了错误，错误代码保存在全局变量 errno 里。<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">size_t</span> a = write(<span class="number">1</span>, <span class="string">&quot;i am chinese\n&quot;</span>, <span class="number">14</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;I write %lu bytes\n&quot;</span>, a);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>输出结果：<br>i am chinese<br>I write 14 bytes</p>
+</blockquote>
+</li>
+</ul>
+<h4 id="read"><a href="#read" class="headerlink" title="read:"></a>read:</h4><ul>
+<li><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">size_t</span> <span class="title function_">read</span><span class="params">(<span class="type">int</span> fd,<span class="type">void</span> *buf,<span class="type">size_t</span> size)</span>;</span><br></pre></td></tr></table></figure></li>
+<li>作用：从文件描述符 fd 相关联的文件里读入 size 个字节的数据，并把它们放到数据区 buf 中。它返回实际读入的字节数,这可能会小于请求的字节数</li>
+<li>如果 read 调用返回 0，就表示没有读入任何数据，已到达了文件尾；如果返回 -1，则表示 read 调用出现了错误。</li>
+<li><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">char</span> buffer[<span class="number">20</span>];</span><br><span class="line">    read(<span class="number">0</span>,buffer,<span class="number">20</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%s&quot;</span>,buffer);</span><br><span class="line">    <span class="comment">//fflush(stdout);</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>输出结果：&#x2F;&#x2F;Linux<br>who are you &#x2F;&#x2F;按回车键<br>who are you</p>
+<p>who are youwho are you &#x2F;&#x2F;ctrl+D</p>
+</blockquote>
+</li>
+</ul>
+<h4 id="open："><a href="#open：" class="headerlink" title="open："></a>open：</h4>
         
     </section>
 </article>

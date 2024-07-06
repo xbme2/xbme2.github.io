@@ -145,6 +145,30 @@
                 
     <article class="article" itemscope itemprop="blogPost">
     
+    <header class="article-header">
+        
+        <h1 itemprop="name">
+            <a href="/2024/07/06/%E4%B8%BA%E4%BB%80%E4%B9%88%E8%AF%B4%E6%97%A0%E8%81%8C%E8%BD%AC%E7%94%9F%E6%98%AF%E6%9C%80%E5%A5%BD%E7%9A%84%E5%BC%82%E4%B8%96%E7%95%8C%E5%8A%A8%E7%94%BB/">为什么说无职转生是最好的异世界动画</a>
+        </h1>
+        
+        <div class="article-meta clearfix">
+            <a class="article-date" href="https://xbme2.github.io/index.html">
+    
+    <i class="icon-calendar vm"></i>
+    
+    <time class="vm" datetime="2024-07-06T04:14:33.282Z" itemprop="datePublished">2024-07-06</time>
+</a>
+
+            
+<div class="article-tag-list">
+    <i class="icon-tag vm"></i>
+    <a class="article-tag-link" href="/tags/%E6%9D%82%E8%B0%88/" rel="tag">杂谈</a>
+</div>
+
+
+        </div>
+    </header>
+    
     <section class="article-body markdown-body">
         
         
@@ -290,15 +314,51 @@
     
     <section class="article-body markdown-body">
         
-        <h2 id="Linux下，everything-is-file"><a href="#Linux下，everything-is-file" class="headerlink" title=" Linux下，everything is file"></a><center> Linux下，everything is file</h2>
-        
-        <p class="article-more-link">
-            <a href="/2024/05/26/file/#more">
-                <span class="vm">阅读更多</span>
-                <i class="icon-arrow-double-right vm"></i>    
-            </a>
-        </p>
-        
+        <span id="more"></span>
+<h2 id="Linux下，everything-is-file"><a href="#Linux下，everything-is-file" class="headerlink" title=" Linux下，everything is file"></a><center> Linux下，everything is file</h2><h3 id="一-文件描述符"><a href="#一-文件描述符" class="headerlink" title="一.文件描述符"></a>一.文件描述符</h3><ul>
+<li>我们知道,在Linux系统中一切皆可以看成是文件，文件又可分为：普通文件、目录文件、链接文件和设备文件。在操作这些所谓的文件的时候，我们每操作一次就找一次名字，这会耗费大量的时间和效率。所以Linux中规定每一个文件对应一个索引，这样要操作文件的时候，我们直接找到索引就可以对其进行操作了。</li>
+<li>$\therefore$ 文件描述符<ul>
+<li>文件描述符是一个用于访问文件或其他输入&#x2F;输出资源的 “指针”。在 Unix 和类 Unix 操作系统中，文件描述符是一个非负整数，用于表示一个打开的文件、管道、网络连接或其他类似的资源。当一个程序打开一个文件或创建一个数据流时，操作系统会返回一个文件描述符，程序可以通过这个描述符来读取、写入或操作对应的文件或资源。</li>
+<li>0：标准输入 1：标准输出 2：错误输出</li>
+</ul>
+</li>
+</ul>
+<h4 id="stdin"><a href="#stdin" class="headerlink" title="stdin"></a>stdin</h4><ul>
+<li>stdin默认从键盘读取输入</li>
+<li>UNIX 约定是 stdin 与 stdout 若与终端关联则为行缓冲(<em><strong>?防止频繁的系统调用</strong></em>)，而 stderr 为无缓冲</li>
+<li>行缓冲刷新的条件<ul>
+<li>遇到\n</li>
+<li>超过缓存区的大小（默认1024字节，可更改）</li>
+<li>手动刷新，如fflush(stdout)</li>
+<li>进程结束</li>
+</ul>
+</li>
+<li>在c里，<em><strong>printf</strong></em>是发送格式化输出到标准输出 stdout，<em><strong>perror</strong></em>发送字符串到标准错误stdeer  </li>
+<li>以上仅针对Linux，Windows下stdout似乎也是无缓冲<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stdout</span>, <span class="string">&quot;hello&quot;</span>);</span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;world&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>在Linux下，输出结果是worldhello，但在Windows下输出是helloworld</li>
+</ul>
+<h3 id="二-对文件的系统调用"><a href="#二-对文件的系统调用" class="headerlink" title="二.对文件的系统调用"></a>二.对文件的系统调用</h3><h4 id="write："><a href="#write：" class="headerlink" title="write："></a>write：</h4><p>- </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">size_t</span> <span class="title function_">write</span><span class="params">(<span class="type">int</span> fd,<span class="type">const</span> <span class="type">void</span> *buf,<span class="type">size_t</span> size)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>作用：把缓冲区buf的前size个字节写入与文件描述符<em><strong>fd</strong></em>，返回实际写入的字节数</li>
+<li>如果函数返回值为 0，就表示没有写入任何数据；如果返回值为 -1，则表明 write 系统调用出现了错误，错误代码保存在全局变量 errno 里。<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">size_t</span> a = write(<span class="number">1</span>, <span class="string">&quot;i am chinese\n&quot;</span>, <span class="number">14</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;I write %lu bytes\n&quot;</span>, a);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>输出结果：<br>i am chinese<br>I write 14 bytes</p>
+</blockquote>
+</li>
+</ul>
+<h4 id="read"><a href="#read" class="headerlink" title="read:"></a>read:</h4><ul>
+<li><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">size_t</span> <span class="title function_">read</span><span class="params">(<span class="type">int</span> fd,<span class="type">void</span> *buf,<span class="type">size_t</span> size)</span>;</span><br></pre></td></tr></table></figure></li>
+<li>作用：从文件描述符 fd 相关联的文件里读入 size 个字节的数据，并把它们放到数据区 buf 中。它返回实际读入的字节数,这可能会小于请求的字节数</li>
+<li>如果 read 调用返回 0，就表示没有读入任何数据，已到达了文件尾；如果返回 -1，则表示 read 调用出现了错误。</li>
+<li><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">char</span> buffer[<span class="number">20</span>];</span><br><span class="line">    read(<span class="number">0</span>,buffer,<span class="number">20</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%s&quot;</span>,buffer);</span><br><span class="line">    <span class="comment">//fflush(stdout);</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>输出结果：&#x2F;&#x2F;Linux<br>who are you &#x2F;&#x2F;按回车键<br>who are you</p>
+<p>who are youwho are you &#x2F;&#x2F;ctrl+D</p>
+</blockquote>
+</li>
+</ul>
+<h4 id="open："><a href="#open：" class="headerlink" title="open："></a>open：</h4>
         
     </section>
 </article>
@@ -332,17 +392,49 @@
     
     <section class="article-body markdown-body">
         
-        <blockquote>
+        <span id="more"></span>
+<blockquote>
 <p>写某作业的时候发现自己基础太差了，想记录一下知识，老用却不明白</p>
 </blockquote>
-        
-        <p class="article-more-link">
-            <a href="/2024/05/21/getline/#more">
-                <span class="vm">阅读更多</span>
-                <i class="icon-arrow-double-right vm"></i>    
-            </a>
-        </p>
-        
+<h4 id="一-：那就从getline开始-fstream"><a href="#一-：那就从getline开始-fstream" class="headerlink" title="一 ：那就从getline开始(fstream)"></a>一 ：那就从getline开始(fstream)</h4><ul>
+<li>getline是C++标准库函数；它有两种形式，一种是头文件&lt; istream &gt;中输入流<em><strong>成员函数</strong></em>；一种在头文件&lt; string &gt;中普通函数</li>
+</ul>
+<h5 id="在-istream-中的getline-函数有两种重载形式："><a href="#在-istream-中的getline-函数有两种重载形式：" class="headerlink" title="在&lt; istream &gt;中的getline()函数有两种重载形式："></a>在&lt; istream &gt;中的getline()函数有两种重载形式：</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">istream &amp; <span class="title">getline</span><span class="params">(<span class="type">char</span>* buf, <span class="type">int</span> bufSize)</span></span>;</span><br><span class="line"><span class="function">istream &amp; <span class="title">getline</span><span class="params">(<span class="type">char</span>* buf, <span class="type">int</span> bufSize, <span class="type">char</span> delim)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>其中，第一种语法格式用于从文件输入流缓冲区中读取 bufSize-1 个字符到 buf，或遇到 \n 为止（哪个条件先满足就按哪个执行），该方法会自动在 buf 中读入数据的结尾添加 ‘\0’。</p>
+<p>第二种语法格式和第一种的区别在于，第一个版本是读到 \n 为止，第二个版本是读到 delim 字符为止。\n 或 delim 都不会被读入 buf，但会被从文件输入流缓冲区中取走。</p>
+<p>以上 2 种格式中，getline() 方法都会返回一个当前所作用对象的引用。比如，obj.getline() 会返回 obj 的引用。</p>
+<ul>
+<li>代码实例<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">char</span> c[<span class="number">40</span>];</span><br><span class="line">    <span class="comment">//以二进制模式打开 in.txt 文件</span></span><br><span class="line">    <span class="comment">//输入流对象是infile</span></span><br><span class="line">    <span class="function">ifstream <span class="title">inFile</span><span class="params">(<span class="string">&quot;in.txt&quot;</span>, ios::in | ios::binary)</span></span>;</span><br><span class="line">    <span class="comment">//判断文件是否正常打开</span></span><br><span class="line">    <span class="keyword">if</span> (!inFile) &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;error&quot;</span> &lt;&lt; endl;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//从 in.txt 文件中读取一行字符串，最多不超过 39 个</span></span><br><span class="line">    inFile.<span class="built_in">getline</span>(c, <span class="number">40</span>);</span><br><span class="line">    cout &lt;&lt; c ;</span><br><span class="line">    inFile.<span class="built_in">close</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span>					</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">char</span> name[<span class="number">256</span>];</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;Please input your name: &quot;</span>;</span><br><span class="line">    <span class="comment">//输入流对象是cin</span></span><br><span class="line">	cin.<span class="built_in">getline</span>(name, <span class="number">256</span>);</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;The result is:   &quot;</span> &lt;&lt; name &lt;&lt; endl;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="在-string-中的getline函数有四种重载形式："><a href="#在-string-中的getline函数有四种重载形式：" class="headerlink" title="在&lt; string &gt;中的getline函数有四种重载形式："></a>在&lt; string &gt;中的getline函数有四种重载形式：</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">istream&amp; <span class="title">getline</span> <span class="params">(istream&amp;  is, string&amp; str, <span class="type">char</span> delim)</span></span>;</span><br><span class="line"><span class="function">istream&amp; <span class="title">getline</span> <span class="params">(istream&amp;&amp; is, string&amp; str, <span class="type">char</span> delim)</span></span>;</span><br><span class="line"><span class="function">istream&amp; <span class="title">getline</span> <span class="params">(istream&amp;  is, string&amp; str)</span></span>;</span><br><span class="line"><span class="function">istream&amp; <span class="title">getline</span> <span class="params">(istream&amp;&amp; is, string&amp; str)</span></span>;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>函数的变量：<br>is ：表示一个输入流，例如 cin。<br>str ：string类型的引用，用来存储输入流中的流信息。<br>delim ：char类型的变量，所设置的截断字符；在不自定义设置的情况下，遇到’\n’，则终止输入<br>用法和上一种类似，但是读取的istream是作为参数is传进函数的。读取的字符串保存在string类型的str中。</p>
+</blockquote>
+<ul>
+<li>代码实例：<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	string name;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;Please input your name: &quot;</span>;</span><br><span class="line">	<span class="built_in">getline</span>(cin, name);</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;Welcome to here!&quot;</span> &lt;&lt; name &lt;&lt; endl;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ifstream in;</span><br><span class="line">    in.<span class="built_in">open</span>(<span class="string">&quot;input.txt&quot;</span>);</span><br><span class="line">    string st;</span><br><span class="line">    <span class="keyword">if</span> (!in.<span class="built_in">is_open</span>())</span><br><span class="line">        cerr &lt;&lt; <span class="string">&quot;no such file!&quot;</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">while</span> (<span class="built_in">getline</span>(in, st))</span><br><span class="line">        &#123;</span><br><span class="line">            cout &lt;&lt; st &lt;&lt; endl;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="二-istringstream-sstream"><a href="#二-istringstream-sstream" class="headerlink" title="二   istringstream(sstream)"></a>二   istringstream(sstream)</h4><blockquote>
+<p>istringstream的构造函数原形：<br>istringstream::istringstream(string str);  </p>
+</blockquote>
+<ul>
+<li><p>描述：从流中提取数据，<em><strong>支持 &gt;&gt; 操作</strong></em><br>这里字符串可以包括多个单词，单词之间使用空格分开(<em><strong>C++默认通过空格（或回车）来分割字符串输入</strong></em>)</p>
+</li>
+<li><p>初始化：使用字符串进行初始化</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">istringstream <span class="title">istr</span><span class="params">(<span class="string">&quot;1 56.7&quot;</span>)</span></span>;  </span><br><span class="line">istr.<span class="built_in">str</span>(<span class="string">&quot;1 56.7&quot;</span>);<span class="comment">//把字符串&quot;1 56.7&quot;存入字符串流中</span></span><br></pre></td></tr></table></figure></li>
+<li><p>使用：我们可以使用分解点获取不同的数据，完成 <em><strong>字符串</strong></em> 到 <em><strong>其他类型</strong></em>的转换</p>
+</li>
+<li><p>常用成员函数：</p>
+<ul>
+<li>str()：使istringstream对象返回一个string字符串</li>
+</ul>
+</li>
+<li><p>举例：把字符串类型的数据转换为其他类型</p>
+</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span>   </span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sstream&gt;</span>   </span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;  </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span>  </span></span><br><span class="line"><span class="function"></span>&#123;  </span><br><span class="line">    <span class="function">istringstream <span class="title">istr</span><span class="params">(<span class="string">&quot;1 56.7&quot;</span>)</span></span>;  </span><br><span class="line">  </span><br><span class="line">    cout&lt;&lt;istr.<span class="built_in">str</span>()&lt;&lt;endl;<span class="comment">//直接输出字符串的数据 &quot;1 56.7&quot;   </span></span><br><span class="line">      </span><br><span class="line">    string str = istr.<span class="built_in">str</span>();<span class="comment">//函数str()返回一个字符串   </span></span><br><span class="line">    cout&lt;&lt;str&lt;&lt;endl;  </span><br><span class="line">      </span><br><span class="line">    <span class="type">int</span> n;  </span><br><span class="line">    <span class="type">double</span> d;  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">//以空格为界，把istringstream中数据取出，应进行类型转换   </span></span><br><span class="line">    istr&gt;&gt;n;<span class="comment">//第一个数为整型数据，输出1   </span></span><br><span class="line">    istr&gt;&gt;d;<span class="comment">//第二个数位浮点数，输出56.7   </span></span><br><span class="line">  </span><br><span class="line">    <span class="comment">//假设换下存储类型   </span></span><br><span class="line">    istr&gt;&gt;d;<span class="comment">//istringstream第一个数要自动变成浮点型，输出仍为1   </span></span><br><span class="line">    istr&gt;&gt;n;<span class="comment">//istringstream第二个数要自动变成整型，有数字的阶段，输出为56   </span></span><br><span class="line">  </span><br><span class="line">    <span class="comment">//测试输出   </span></span><br><span class="line">    cout&lt;&lt;d&lt;&lt;endl;  </span><br><span class="line">    cout&lt;&lt;n&lt;&lt;endl;  </span><br><span class="line">    <span class="built_in">system</span>(<span class="string">&quot;pause&quot;</span>);  </span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;  </span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span>   </span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sstream&gt;</span>   </span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;  </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span>  </span></span><br><span class="line"><span class="function"></span>&#123;  </span><br><span class="line">    istringstream istr;  </span><br><span class="line">    string line,str;  </span><br><span class="line">    <span class="keyword">while</span> (<span class="built_in">getline</span>(cin,line))<span class="comment">//从终端接收一行字符串，并放入字符串line中   </span></span><br><span class="line">    &#123;  </span><br><span class="line">        istr.<span class="built_in">str</span>(line);<span class="comment">//把line中的字符串存入字符串流中   </span></span><br><span class="line">        <span class="keyword">while</span>(istr &gt;&gt; str)<span class="comment">//每次读取一个单词（以空格为界），存入str中   </span></span><br><span class="line">        &#123;  </span><br><span class="line">            cout&lt;&lt;str&lt;&lt;endl;  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="built_in">system</span>(<span class="string">&quot;pause&quot;</span>);  </span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;  </span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
         
     </section>
 </article>
@@ -413,15 +505,21 @@
     
     <section class="article-body markdown-body">
         
-        <h2 id="It-is-xbme2-blog"><a href="#It-is-xbme2-blog" class="headerlink" title="It is xbme2 blog"></a>It is xbme2 blog</h2>
-        
-        <p class="article-more-link">
-            <a href="/2024/05/14/hello-world/#more">
-                <span class="vm">阅读更多</span>
-                <i class="icon-arrow-double-right vm"></i>    
-            </a>
-        </p>
-        
+        <span id="more"></span>
+<h2 id="It-is-xbme2-blog"><a href="#It-is-xbme2-blog" class="headerlink" title="It is xbme2 blog"></a>It is xbme2 blog</h2><p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+
         
     </section>
 </article>

@@ -127,8 +127,8 @@
     
     <section class="article-body markdown-body">
         
-        <h2 id="Linux下，everything-is-file"><a href="#Linux下，everything-is-file" class="headerlink" title=" Linux下，everything is file"></a><center> Linux下，everything is file</h2><span id="more"></span>
-<h3 id="一-文件描述符"><a href="#一-文件描述符" class="headerlink" title="一.文件描述符"></a>一.文件描述符</h3><ul>
+        <span id="more"></span>
+<h2 id="Linux下，everything-is-file"><a href="#Linux下，everything-is-file" class="headerlink" title=" Linux下，everything is file"></a><center> Linux下，everything is file</h2><h3 id="一-文件描述符"><a href="#一-文件描述符" class="headerlink" title="一.文件描述符"></a>一.文件描述符</h3><ul>
 <li>我们知道,在Linux系统中一切皆可以看成是文件，文件又可分为：普通文件、目录文件、链接文件和设备文件。在操作这些所谓的文件的时候，我们每操作一次就找一次名字，这会耗费大量的时间和效率。所以Linux中规定每一个文件对应一个索引，这样要操作文件的时候，我们直接找到索引就可以对其进行操作了。</li>
 <li>$\therefore$ 文件描述符<ul>
 <li>文件描述符是一个用于访问文件或其他输入&#x2F;输出资源的 “指针”。在 Unix 和类 Unix 操作系统中，文件描述符是一个非负整数，用于表示一个打开的文件、管道、网络连接或其他类似的资源。当一个程序打开一个文件或创建一个数据流时，操作系统会返回一个文件描述符，程序可以通过这个描述符来读取、写入或操作对应的文件或资源。</li>
